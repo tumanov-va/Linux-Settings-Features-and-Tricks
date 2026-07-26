@@ -1,4 +1,4 @@
-## Linux-Settings-Features-and-Tricks
+Linux-Settings-Features-and-Tricks
 
 # Remove NGINX and Let's Encrypt (Certbot) from your Ubuntu server
 
