@@ -1,82 +1,110 @@
-To completely remove NGINX and Let's Encrypt (Certbot) from your Ubuntu server, you'll need to perform a series of steps to ensure that all files, configurations, and dependencies are properly removed.
+To completely remove **NGINX** and **Let's Encrypt** (Certbot) from your Ubuntu server, you'll need to perform a series of steps to ensure that all files, configurations, and dependencies are properly removed.
 
 Here's how to do it:
-1. Stop and disable NGINX
+
+### 1. **Stop and disable NGINX**
 
 Before you remove NGINX, make sure it's stopped and disabled:
 
+```bash
 sudo systemctl stop nginx
 sudo systemctl disable nginx
+```
 
-2. Remove NGINX packages
+### 2. **Remove NGINX packages**
 
-You can uninstall NGINX and its associated packages using apt:
+You can uninstall NGINX and its associated packages using `apt`:
 
+```bash
 sudo apt-get purge nginx nginx-common nginx-full nginx-core nginx-doc
+```
 
 This will remove NGINX and its common configuration files. To make sure you also remove any unused dependencies:
 
+```bash
 sudo apt-get autoremove
+```
 
 Additionally, you can clean up residual configuration files:
 
+```bash
 sudo apt-get autoclean
+```
 
-3. Delete NGINX configuration and log files
+### 3. **Delete NGINX configuration and log files**
 
-Even after removing the NGINX packages, some configuration files may still remain in /etc/nginx and log files in /var/log/nginx. Delete these manually:
+Even after removing the NGINX packages, some configuration files may still remain in `/etc/nginx` and log files in `/var/log/nginx`. Delete these manually:
 
+```bash
 sudo rm -rf /etc/nginx
 sudo rm -rf /var/log/nginx
+```
 
-4. Remove Let's Encrypt (Certbot)
+### 4. **Remove Let's Encrypt (Certbot)**
 
-If you've used Certbot (Let's Encrypt) to manage SSL certificates, you'll need to uninstall it as well.
-Remove Certbot and its dependencies
+If you've used **Certbot** (Let's Encrypt) to manage SSL certificates, you'll need to uninstall it as well.
+
+#### Remove Certbot and its dependencies
 
 First, remove Certbot:
 
+```bash
 sudo apt-get purge certbot python3-certbot-nginx
+```
 
 Then remove any remaining unused dependencies:
 
+```bash
 sudo apt-get autoremove
+```
 
-Remove Let's Encrypt certificates and configuration
+#### Remove Let's Encrypt certificates and configuration
 
-Let's Encrypt stores its certificates and related files under /etc/letsencrypt. To delete the certificates and all associated data:
+Let's Encrypt stores its certificates and related files under `/etc/letsencrypt`. To delete the certificates and all associated data:
 
+```bash
 sudo rm -rf /etc/letsencrypt
+```
 
 Additionally, you can delete logs from Let's Encrypt:
 
+```bash
 sudo rm -rf /var/log/letsencrypt
+```
 
-Remove cron jobs (if applicable)
+#### Remove cron jobs (if applicable)
 
 If you set up Certbot for automatic certificate renewal using cron jobs, check if they still exist and remove them.
 
-    To remove any Certbot-related cron jobs:
+- To remove any Certbot-related cron jobs:
 
+```bash
 sudo crontab -e
+```
 
 Look for lines related to Certbot and remove them.
 
 Alternatively, if you set up a systemd timer for automatic renewal, you can disable and remove it:
 
+```bash
 sudo systemctl stop certbot.timer
 sudo systemctl disable certbot.timer
+```
 
-5. Clean up any remaining dependencies
+### 5. **Clean up any remaining dependencies**
 
 You can run the following commands to remove any remaining orphaned packages or dependencies:
 
+```bash
 sudo apt-get autoremove --purge
 sudo apt-get clean
+```
 
-6. Check if anything is left behind
+### 6. **Check if anything is left behind**
 
-You can run dpkg to check if there are any remaining NGINX or Certbot-related packages:
+You can run `dpkg` to check if there are any remaining NGINX or Certbot-related packages:
 
+```bash
 dpkg -l | grep -i nginx
 dpkg -l | grep -i certbot
+```
